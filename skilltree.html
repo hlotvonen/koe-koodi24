@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HTML/CSS skill tree</title>
+  <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/persist@3.x.x/dist/cdn.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+    }
+    body {
+      line-height: 1.5;
+      margin: 0;
+      padding: 1rem;
+      background-color: #f1f1f1;
+    }
+    .grid {
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(480px, 100%), 1fr));
+      gap: 4px;
+    }
+    .skill-box {
+      background-color: lightyellow;
+      border: 1px solid black;
+      border-radius: 0.5rem;
+      padding: 1rem;
+    }
+    .skill-title {
+      font-weight: bold;
+      cursor: default;
+    }
+    .subskill {
+      padding: 0.5rem;
+      border: 1px solid black;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      margin-block: 4px;
+      background-color: #f1f1f1;
+    }
+    .completed {
+      background-color: lime;
+    }
+    .category {
+      font-weight: bold;
+      font-size: 1.5em;
+      margin-top: 2rem;
+    }
+    .category-header {
+      margin-bottom: 1rem;
+    }
+    .progress-text {
+      margin-left: 10px;
+      font-size: 0.9em;
+    }
+  </style>
+</head>
+
+<body x-data="skillTree()">
+  <h1>HTML / CSS skill tree</h1>
+  <div class="wrapper">
+    <template x-for="(category, categoryName) in skills" :key="categoryName">
+      <div>
+        <div class="category-header">
+          <div class="category" x-text="categoryName"></div>
+          <meter :value="calculateProgress(category)" min="0" max="100" low="33" high="66" optimum="80"></meter>
+          <span class="progress-text" x-text="calculateProgressText(category)"></span>
+        </div>
+        <div class="grid">
+          <template x-for="(subskills, skill) in category" :key="skill">
+            <div class="skill-box" :class="{ 'completed': isSkillCompleted(skill, subskills) }">
+              <div class="skill-title" x-text="skill" @click="toggleSkill(skill)"></div>
+              <template x-for="subskill in subskills" :key="subskill">
+                <div class="subskill" :class="{ 'completed': completedSkills.includes(subskill) }" x-text="completedSkills.includes(subskill) ? '✓ ' + subskill : subskill"
+                  @click="toggleSkill(subskill)"></div>
+              </template>
+            </div>
+        </div>
+    </template>
+  </div>
+  </template>
+  </div>
+
+  <script>
+    function skillTree() {
+      return {
+        skills: {
+          "GENERAL": {
+            "Folders and files": [
+              "I understand what folders and files are",
+              "I understand folder structure",
+              "I have enabled the computer setting that reveals file extensions",
+              "I know how to name folders and files for the web",
+              "I know which folder to use for creating websites",
+              "I know how to save a file",
+            ],
+            "Tools": [
+              "I have installed a text editor suitable for coding",
+              "I have installed a live server",
+              "I know how to open a web project in a text editor and enable the live server",
+              "I have installed Firefox or another browser other than Safari (and understand why)"
+            ],
+            "Internet": [
+              "I roughly understand what the Internet is",
+              "I understand the difference between the Internet and WWW",
+              "I roughly understand what different Internet protocols there are",
+              "I understand what a browser is",
+              "I understand what an IP address is",
+              "I understand what a domain is",
+              "I understand what HTTP is",
+              "I know where to buy a domain",
+              "I know what a name server is",
+              "I know what DNS is",
+              "I know how to point a domain to my own website"
+            ],
+            "Server": [
+              "I understand the difference between my own computer and a server",
+              "I understand the difference between my own computer's hard drive and cloud service",
+              "I understand what backend and frontend are and the difference between them",
+              "I understand what static and dynamic websites are, and the difference between them",
+              "I roughly know how a server works",
+              "I know where static pages can be hosted",
+              "I know where I can buy a hosting service",
+              "I know what a CMS and database are",
+              "I know how to transfer files to a server"
+            ],
+            "Browser": [
+              "I understand what a browser does",
+              "I know how the browser reads and executes HTML and CSS"
+            ],
+            "Inspect tool": [
+              "I know how to view the source code of webpages",
+              "I know how to open the Inspect tool",
+              "I know how to examine page elements with the Inspect tool",
+              "I know how to examine element styles with the Inspect tool and change style values",
+              "I know how to check for error messages in the Inspect tool",
+              "I know how to use the Inspect tool for debugging"
+            ],
+            "Finding information": [
+              "I know how to seek help for my coding problems and what kind of search terms to use"
+            ]
+          },  
+          "HTML I": {
+            "Basics": [
+              "I understand what HTML is and what it's used for",
+              "I understand the structure of an HTML document",
+              "I know how to create an HTML file that meets the minimum requirements",
+              "I know how to open and close an HTML tags",
+              "I know which elements do not need closing tags",
+              "I know the syntax of HTML attributes",
+              "I understand how HTML elements can be nested",
+              "I know how to properly line break, indent, and structure an HTML file",
+              "I know how to add comments to an HTML file"
+            ],
+            "Head": [
+              "I understand the purpose of the head element",
+              "I know how to use the title tag",
+              "I know how to add all important meta elements",
+              "I know how to add a favicon to a page"
+            ],
+            "Text content I": [
+              "I know how to mark headings",
+              "I know how to mark text paragraphs",
+              "I know how to use italics and bold correctly",
+              "I know how to create numbered and bulleted lists"
+            ],
+            "Hyperlinks": [
+              "I understand the web as linked documents",
+              "I know how to create an internal page link",
+              "I know how to create an external page link",
+              "I know how to make a link open in a new tab",
+              "I know how to navigate folder structures in the file path",
+              "I know the difference between absolute and relative file paths"
+            ],
+            "Image": [
+              "I know how to use the img tag",
+              "I know how to optimize an image for the web and understand why it needs to be done"
+            ]
+          },
+          "CSS": {
+            "Basics": [
+              "I understand what CSS is and what it's used for",
+              "I know how to link a CSS file to an HTML file",
+              "I know that browsers have default styles and I know how to reset them",
+              "I know that different browsers display things slightly differently and that not all browsers support all features",
+              "I know how to use the style element",
+              "I know how to use the style attribute",
+              "I know how to add comments to a CSS file"
+            ],
+            "Selectors and Cascade": [
+              "I know how to use element selectors",
+              "I understand the difference and use of class and ID selectors",
+              "I understand what CASCADING style sheets means, and I know how selector specificity works",
+              "I understand how pseudo-classes and pseudo-elements work",
+              "I understand the child, parent, and sibling relationships of elements",
+              "I know about the !important declaration",
+            ],
+            "Pseudo-classes": [
+              "I know how to use basic pseudo-classes like :hover",
+            ],
+            "Box Model": [
+              "I understand the differences between content, padding, border, and margin",
+              "I know how to use margin and padding correctly",
+              "I know how to change the box-sizing property of all elements"
+            ],
+            "Units of measurement": [
+              "I know what units of measurement can and should be used",
+              "I know the difference between px, em, and rem units",
+              "I understand what relative units like % and vw are based on and know how to use them"
+            ],
+            "Element size": [
+              "I understand how the size of elements is determined",
+              "I know how to use width, max-width, and min-width properties",
+            ],
+            "Display": [
+              "I know which display property to use in which situation",
+              "I know the difference between display: block; display: inline; and display: inline-block; rules"
+            ],
+            "Flexbox": [
+              "I understand how flexbox works and when to use it",
+              "I understand the effect of the flex-direction property",
+              "I understand the use of flex, flex-shrink, flex-grow properties",
+              "I understand the difference between flex-basis and width rules"
+            ],
+            "Grid": [
+              "I understand how CSS grid works and when to use it",
+              "I know how to create a page layout with CSS grid",
+              "I know how to create a simple but responsive column layout with CSS grid",
+              "I know how to center an element"
+            ],
+            "Typography I": [
+              "I know what font properties can be changed",
+              "I know how to change font size, line height, color, letter spacing, etc.",
+              "I know how to change fonts",
+              "I understand what system fonts are",
+              "I know how to use custom fonts",
+              "I know where to find good (web) fonts",
+              "I know how to change list styles"
+            ],
+            "Colors and backgrounds": [
+              "I understand the use of different color models",
+              "I know how to pick a color from anywhere",
+              "I know how to set background colors for elements and change text color",
+              "I know how to add shadows to elements"
+            ],
+            "Responsive design": [
+              "I understand what responsive design is",
+              "I know how to make elements adapt to window size",
+              "I understand the principles of the mobile-first approach",
+              "I know how to use media queries",
+              "I know how to design with relative units of measurement",
+            ]
+          },
+          "GENERAL Advanced study": {
+            "Legislation": [
+              "I know what GDPR is and know how to take it into account",
+              "I am aware of the EU accessibility directive and know how to take it into account"
+            ],
+            "Internet": [
+              "I know the difference between HTTP and HTTPS",
+              "I understand the basics of web security"
+            ],
+            "Version control": [
+              "I understand what version control is",
+              "I roughly know what Git is",
+              "I know what GitHub is",
+              "I know how to use basic git commands",
+              "I know how to transfer my own pages to GitHub using git",
+            ],
+          },
+          "HTML Advanced study": {
+            "Sharing": [
+              "I know how to add open graph meta elements"
+            ],
+            "Semantic HTML and accessibility": [
+              "I understand why semantic HTML exists",
+              "I know how to use semantic elements correctly",
+              "I understand what accessibility means on the web",
+              "I know the basic principles of accessibility",
+              "I have tried browsing the web with a screen reader",
+              "I know how to use ARIA definitions",
+              "I know how to write good alt texts for images",
+              "I know how to make websites navigable by keyboard",
+              "I know how to take accessibility into account when designing pages",
+              "I know how to check color contrasts and use colors from an accessibility perspective"
+            ],
+            "Other HTML Features": [
+              "I know how to create tables",
+              "I know how to create forms and appropriate form attributes",
+              "I know how to use advanced HTML elements like kbd, attr, samp, sub, sup, time, etc.",
+              "I know how to use video and audio elements",
+              "I know how to use the Canvas element",
+              "I understand the basics of SVG",
+              "I know how to utilize Web Storage features"
+            ]
+          },
+          "CSS Advanced study": {
+            "Position": [
+              "I understand on what basis the positioning coordinate system is determined",
+              "I understand the difference between position:relative; and position:absolute;",
+              "I know how to use different positioning techniques",
+              "I understand the z-axis and what affects it. I know how to use z-index and isolation:isolate; property",
+            ],
+            "Selectors II": [
+              "I know how to utilize attribute selectors",
+              "I know how to use >, +, and ~ in selectors",
+              "I know how to use the wildcard selector",
+              "I know how to use :is, :not, and :has selectors",
+              "I know how to use :first-child, :nth-child, and :last-child selectors",
+              "I know how to use ::before and ::after elements"
+            ],
+            "Modern CSS Features": [
+              "I know how to use CSS variables and create a color theme for a page with them",
+              "I know how to use the calc() function",
+              "I know how to use min, max, minmax, and clamp functions",
+              "I know how to use clip-path, filters, and blend modes",
+              "CSS Subgrid, logical properties, containment, layers, etc..."
+            ],
+            "Responsiveness II": [
+              "I know how to create a responsive image element",
+              "I know how to use container queries",
+              "I know how to take into account the effect of long words and know how to solve them",
+              "I know how to use the overflow property"
+            ],
+            "Typography II": [
+              "I know how to use opentype features",
+              "I know how to use variable fonts",
+              "I know how to take into account different writing systems",
+              "I know how to utilize Unicode character set and HTML entities",
+              "I know how to use hyphenation"
+            ],
+            "Colors II": [
+              "I know how to create complex gradients",
+              "I know how to use the color-mix property",
+              "I know how to utilize oklch and other modern color properties",
+              "I know how to create light and dark modes for a page",
+            ],
+            "Transformations and animations": [
+              "I know how to use 2D and 3D transformations",
+              "I understand how the transition property works",
+              "I know how to create keyframe animations"
+            ],
+            "Printing": [
+              "I know how to create a separate print stylesheet for pages",
+            ]
+          }
+        },
+        completedSkills: Alpine.$persist([]).as('completedSkills'),
+        toggleSkill(skill) {
+          if (this.completedSkills.includes(skill)) {
+            this.completedSkills = this.completedSkills.filter(s => s !== skill);
+          } else {
+            this.completedSkills.push(skill);
+            confetti({
+              particleCount: 100,
+              spread: 70,
+              origin: { y: 0.6 }
+            });
+          }
+        },
+        isSkillCompleted(skill, subskills) {
+          return subskills.every(subskill => this.completedSkills.includes(subskill));
+        },
+        calculateProgress(category) {
+          const totalSkills = Object.values(category).flat().length;
+          const completedSkills = Object.values(category).flat().filter(skill => this.completedSkills.includes(skill)).length;
+          return (completedSkills / totalSkills) * 100;
+        },
+        calculateProgressText(category) {
+          const totalSkills = Object.values(category).flat().length;
+          const completedSkills = Object.values(category).flat().filter(skill => this.completedSkills.includes(skill)).length;
+          return `${completedSkills}/${totalSkills}`;
+        },
+        
+      }
+    }
+  </script>
+</body>
+
+</html>

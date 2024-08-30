@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HTML/CSS skillipuu</title>
+  <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/persist@3.x.x/dist/cdn.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+    }
+    body {
+      line-height: 1.5;
+      margin: 0;
+      padding: 1rem;
+      background-color: #f1f1f1;
+    }
+    .grid {
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(480px, 100%), 1fr));
+      gap: 4px;
+    }
+    .skill-box {
+      background-color: lightyellow;
+      border: 1px solid black;
+      border-radius: 0.5rem;
+      padding: 1rem;
+    }
+    .skill-title {
+      font-weight: bold;
+      cursor: default;
+    }
+    .subskill {
+      padding: 0.5rem;
+      border: 1px solid black;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      margin-block: 4px;
+      background-color: #f1f1f1;
+    }
+    .completed {
+      background-color: lime;
+    }
+    .category {
+      font-weight: bold;
+      font-size: 1.5em;
+      margin-top: 2rem;
+    }
+    .category-header {
+      margin-bottom: 1rem;
+    }
+    .progress-text {
+      margin-left: 10px;
+      font-size: 0.9em;
+    }
+  </style>
+</head>
+
+<body x-data="skillTree()">
+  <h1>HTML/CSS skillipuu</h1>
+  <div class="wrapper">
+    <template x-for="(category, categoryName) in skills" :key="categoryName">
+      <div>
+        <div class="category-header">
+          <div class="category" x-text="categoryName"></div>
+          <meter :value="calculateProgress(category)" min="0" max="100" low="33" high="66" optimum="80"></meter>
+          <span class="progress-text" x-text="calculateProgressText(category)"></span>
+        </div>
+        <div class="grid">
+          <template x-for="(subskills, skill) in category" :key="skill">
+            <div class="skill-box" :class="{ 'completed': isSkillCompleted(skill, subskills) }">
+              <div class="skill-title" x-text="skill" @click="toggleSkill(skill)"></div>
+              <template x-for="subskill in subskills" :key="subskill">
+                <div class="subskill" :class="{ 'completed': completedSkills.includes(subskill) }" x-text="completedSkills.includes(subskill) ? '✓ ' + subskill : subskill"
+                  @click="toggleSkill(subskill)"></div>
+              </template>
+            </div>
+        </div>
+    </template>
+  </div>
+  </template>
+  </div>
+
+  <script>
+    function skillTree() {
+      return {
+        skills: {
+          "YLEISET": {
+            "Kansiot ja tiedostot": [
+              "Ymmärrän mitä kansiot ja tiedostot ovat",
+              "Ymmärrän kansiorakenteen",
+              "Olen kytkenyt koneen asetuksen päälle joka paljastaa tiedostojen päätteet",
+              "Osaan nimetä kansiot ja tiedostot nettiä varten",
+              "Tiedän mihin kansioon nettisivuja kannattaa tehdä",
+              "Osaan tallentaa tiedoston",
+            ],
+            "Työkalut": [
+              "Olen asentanut koodaamiseen sopivan tekstieditorin",
+              "Olen asentanut live serverin",
+              "Osaan avata nettisivuprojektin tekstieditorissa ja kytkeä live serverin päälle",
+              "Olen asentanut Firefoxin, tai jonkun muun selaimen kuin Safari (ja tiedän miksi)"
+            ],
+            "Netti": [
+              "Ymmärrän suurpiirteisesti että mikä Internet on",
+              "Ymmärrän Internetin ja WWW:n eron",
+              "Ymmärrän suurpiirteisesti mitä eri Internet protokollia on",
+              "Ymmärrän mikä selain on",
+              "Ymmärrän mikä on IP osoite",
+              "Ymmärrän mikä on domain",
+              "Ymmärrän mikä on HTTP",
+              "Tiedän mistä ostaa domain",
+              "Tiedän mikä on nimipalvelin",
+              "Tiedän mikä on DNS",
+              "Osaan kytkeä domainin osoittamaan omalle nettisivulle"
+            ],
+            "Palvelin": [
+              "Ymmärrän oman koneen ja palvelimen eron",
+              "Ymmärrän oman koneen kovalevyn ja pilvipalvelun eron",
+              "Tiedän mitä on backend ja frontend ja mikä niiden ero on",
+              "Ymmärrän mitä staattiset ja dynaamiset nettisivut ovat, ja niiden välisen eron",
+              "Tiedän suurinpiirtein miten palvelin toimii",
+              "Tiedän missä staattisia sivuja voi hostaa",
+              "Tiedän mistä voin ostaa hosting palvelun",
+              "Tiedän mikä on CMS ja tietokanta",
+              "Tiedän miten siirrän tiedostot palvelimelle"
+            ],
+            "Selain": [
+              "Tiedän missä järjestyksessä selain lukee koodia"
+            ],
+            "Inspect-työkalu": [
+              "Tiedän miten sivujen lähdekoodia voi tarkastella",
+              "Tiedän miten Inspect-työkalu avataan",
+              "Osaan tarkastella sivun elementtejä Inspect-työkalulla",
+              "Osaan tarkastella elementtien tyylejä Inspect-työkalulla ja muuttaa tyylien arvoja",
+              "Osaan tarkastaa konsolin virheilmoitukset Inspect-työkalusta",
+              "Osaan käyttää Inspect-työkalua debuggaamiseen"
+            ],
+            "Tiedon etsiminen": [
+              "Tiedän miten hakea koodausongelmiini apua ja minkälaisia hakusanoja käyttää"
+            ]
+          },  
+          "HTML": {
+            "Perusteet": [
+              "Ymmärrän mikä on HTML ja mihin sitä käytetään",
+              "Ymmärrän HTML dokumentin rakenteen",
+              "Osaan tehdä vähimmäisvaatimukset täyttävän HTML-tiedoston",
+              "Tiedän miten HTML elementtien tagit avataan ja suljetaan",
+              "Tiedän miten HTML attribuutteja käytetään",
+              "Ymmärrän miten HTML-elementit voivat menevät sisäkkäin",
+              "Osaan rivittää, sisentää ja jäsennellä HTML tiedoston oikein",
+              "Osaan lisätä kommentteja HTML tiedostoon"
+            ],
+            "Head": [
+              "Ymmärrän head elementin tarkoituksen",
+              "Osaan käyttää title tagia",
+              "Osaan lisätä kaikki tärkeät meta elementit",
+              "Osaan lisätä sivulle faviconin"
+            ],
+            "Tekstisisältö I": [
+              "Osaan merkitä otsikot",
+              "Osaan merkitä tekstikappaleet",
+              "Osaan käyttää kursivointia ja lihavointia oikein",
+              "Osaan tehdä numeroituja ja numeroimattomia listoja"
+            ],
+            "Linkit": [
+              "Ymmärrän netin linkittyneinä dokumentteina",
+              "Osaan tehdä sivun sisäisen linkin",
+              "Osaan tehdä sivun ulkoisen linkin",
+              "Osaan tehdä linkin avautumaan uudessa välilehdessä",
+              "Tiedän miten navigoida kansiorakennetta tiedostopolulla",
+              "Tiedän mitä eroa on absoluuttisella ja suhteellisella tiedostopolulla"
+            ],
+            "Kuva": [
+              "Osaan käyttää img tagia",
+              "Osaan optimoida kuvan nettiin ja ymmärrän miksi niin täytyy tehdä"
+            ]
+          },
+          "CSS": {
+            "Perusteet": [
+              "Ymmärrän mikä on CSS ja mihin sitä käytetään",
+              "Osaan linkittää CSS-tiedoston HTML-tiedostoon",
+              "Tiedän että selaimissa on oletustyylit ja osaan resetoida ne",
+              "Tiedän että eri selaimet näyttää asiat vähän eri tavalla ja että kaikki selaimet ei tue kaikkia ominaisuuksia",
+              "Osaan käyttää style elementtiä",
+              "Osaan käyttää style attribuuttia",
+              "Osaan lisätä kommentteja CSS tiedostoon"
+            ],
+            "Valitsimet ja Cascade": [
+              "Osaan käyttää elementtivalitsimia",
+              "Ymmärrän luokka- ja ID-valitsimien eron ja käytön",
+              "Ymmärrän mitä tarkoittaa CASCADING style sheets, ja tiedän miten valitsimien spesifisyys toimii",
+              "Ymmärrän pseudo-luokkien ja -elementtien toiminnan",
+              "Ymmärrän elementtien child, parent ja sibling suhteet",
+              "Tiedän !important määreestä",
+            ],
+            "Pseudo-luokat": [
+              "Osaan käyttää perus pseudo-luokkaa kuten :hover",
+            ],
+            "Box Model": [
+              "Ymmärrän sisällön, paddingin, borderin ja marginin erot",
+              "Osaan käyttää marginia ja paddinggia oikein",
+              "Osaan muuttaa kaikkien elementtien box-sizing ominaisuuden"
+            ],
+            "Mittayksiköt": [
+              "Tiedän mitä mittayksiköitä voi ja kannattaa käyttää",
+              "Tiedän mitä eroa on px, em ja rem mittayksiköillä",
+              "Ymmärrän mihin suhteelliset mittayksiköt kuten % ja vw perustuu ja osaan käyttää niitä"
+            ],
+            "Elementtien koko": [
+              "Ymmärrän miten elementtien koko määräytyy",
+              "Osaan hyödyntää width, max-width ja min-width ominaisuuksia",
+            ],
+            "Display": [
+              "Tiedän mitä display ominaisuutta kannattaa käyttää missäkin",
+              "Tiedän mitä eroa on display: block; display: inline; ja display: inline-block; säännöillä"
+            ],
+            "Flexbox": [
+              "Ymmärrän miten flexbox toimii ja mihin sitä kannattaa käyttää",
+              "Ymmärrän flex-direction -ominaisuuden vaikutuksen",
+              "Ymmärrän flex, flex-shrink, flex-grow ominaisuuksien käytön",
+              "Ymmärrän flex-basis ja width sääntöjen eron"
+            ],
+            "Grid": [
+              "Ymmärrän miten CSS grid toimii ja mihin sitä kannattaa käyttää",
+              "Osaan tehdä CSS gridillä sivupohjan",
+              "Osaan tehdä CSS gridillä yksinkertaisen mutta responsiivisen palstasommitelman",
+              "Osaan keskittää elementin"
+            ],
+            "Typografia I": [
+              "Tiedän mitä fonttien ominaisuuksia voi vaihtaa",
+              "Osaan vaihtaa fonttien kokoa, riviväliä, väriä, kirjainväliä jne.",
+              "Osaan vaihtaa fonttia",
+              "Ymmärrän mitä on system fonts",
+              "Osaan käyttää custom fontteja",
+              "Tiedän mistä voin löytää hyviä (netti)fontteja",
+              "Osaan muuttaa listojen tyyliä"
+            ],
+            "Värit ja taustat": [
+              "Ymmärrän eri värimallien käytön",
+              "Osaan poimia värin mistä vain",
+              "Osaan laittaa elementeille taustavärin ja vaihtaa tekstin väriä",
+              "Osaan lisätä varjoja elementteihin"
+            ],
+            "Responsiivinen suunnittelu": [
+              "Ymmärrän mitä on responsiivinen suunnittelu",
+              "Osaan tehdä elementeistä ikkunan kokoon mukautuvia",
+              "Ymmärrän mobile-first-lähestymistavan periaatteet",
+              "Osaan käyttää media queryjä",
+              "Osaan suunnitella suhteellisilla mittayksiköillä",
+            ]
+          },
+          "YLEINEN Jatko-opiskelu": {
+            "Lainsäädäntö": [
+              "Tiedän mikä on GDPR ja osaan ottaa sen huomioon",
+              "Olen tietoinen EU:n saavutettavuusdirektiivistä ja osaan ottaa sen huomioon"
+            ],
+            "Netti": [
+              "Tiedän mikä on HTTP:n ja HTTPS:n ero",
+              "Ymmärrän web-tietoturvan perusteet"
+            ],
+            "Versiokontrolli": [
+              "Ymmärrän mitä on versiokontrolli",
+              "Tiedän suurinpiirtein mikä on Git",
+              "Tiedän mikä on Github",
+              "Osaan käyttää perus git komentoja",
+              "Osaan siirtää omat sivut gitin avulla Githubiin",
+            ],
+          },
+          "HTML Jatko-opiskelu": {
+            "Jakaminen": [
+              "Osaan lisätä open graph meta elementit"
+            ],
+            "Semanttinen HTML ja saavutettavuus": [
+              "Ymmärrän miksi semanttinen HTML on olemassa",
+              "Osaan käyttää semanttisia elementtejä oikein",
+              "Ymmärrän mitä tarkoittaa saavutettavuus netissä",
+              "Tiedän saavutettavuuden perusperiaatteet",
+              "Olen kokeillut selata nettiä ruudunlukuohjelmalla",
+              "Osaan käyttää ARIA määritelmiä",
+              "Osaan kirjoittaa kuville hyviä alt tekstejä",
+              "Osaan tehdä nettisivuista näppäimistöllä navigoitavia",
+              "Osaan ottaa saavutettavuuden huomioon sivuja suunnitellessa",
+              "Osaan tarkastaa värikontrastit ja käyttää värejä saavutettavuuden näkökulmasta"
+            ],
+            "Muut HTML Ominaisuudet": [
+              "Osaan luoda taulukoita",
+              "Osaan luoda lomakkeita ja asianmukaisia lomakeattribuutteja",
+              "Osaan käyttää edistyneitä html elementtejä kuten kbd, attr, samp, sub, sup, time jne.",
+              "Osaan käyttää video ja audio elementtejä",
+              "Osaan käyttää Canvas-elementtiä",
+              "Ymmärrän SVG:n perusteet",
+              "Osaan hyödyntää Web Storage -ominaisuuksia"
+            ]
+          },
+          "CSS Jatko-opiskelu": {
+            "Position": [
+              "Ymmärrän millä perusteella positioinnin koordinaatisto määräytyy",
+              "Ymmärrän position:relative; ja position:absolute; eron",
+              "Osaan käyttää eri positiointi-tekniikoita",
+              "Ymmärrän z-akselin ja mikä siihen vaikuttaa. Osaan käyttää z-indexiä ja isolation:isolate; ominaisuutta",
+            ],
+            "Valitsimet II": [
+              "Osaan hyödyntää attribuuttivalitsimia",
+              "Osaan käyttää > + ja ~ valitsimissa",
+              "Osaan käyttää villikortti-valitsinta",
+              "Osaan käyttää :is, :not ja :has valitsimia",
+              "Osaan käyttää :first-child, :nth-child ja :last-child valitsimia",
+              "Osaan käyttää ::before ja ::after elementtejä"
+            ],
+            "Modernit CSS Ominaisuudet": [
+              "Osaan käyttää CSS-muuttujia ja luoda niillä esim. väriteeman sivulle",
+              "Osaan käyttää calc()-funktiota",
+              "Osaan käyttää min, max, minmax ja clamp funktioita",
+              "Osaan käyttää clip-pathia, filttereitä ja blend modeja",
+              "CSS Subgrid, logical properties, containment, layers jne..."
+            ],
+            "Responsiivisuus II": [
+              "Osaan tehdä responsiivisen kuva-elementin",
+              "Osaan käyttää container queriessejä",
+              "Osaan ottaa huomioon pitkien sanojen vaikutuksen ja tiedän miten ne kannattaa ratkaista",
+              "Osaan käyttää overflow ominaisuutta"
+            ],
+            "Typografia II": [
+              "Osaan käyttää opentype ominaisuuksia",
+              "Osaan käyttää variable fontseja",
+              "Osaan ottaa huomioon eri kielijärjestelmät",
+              "Osaan hyödyntää Unicode merkistöä ja HTML entiteettejä",
+              "Osaan käyttää hyphen"
+            ],
+            "Värit II": [
+              "Osaan luoda monimutkaisia liukuvärejä",
+              "Osaan käyttää color-mix ominaisuutta",
+              "Osaan hyödyntää oklch ja muita moderneja väriominaisuuksia",
+              "Osaan luoda sivulle light- ja dark modet",
+            ],
+            "Transformaatiot ja animaatiot": [
+              "Osaan käyttää 2D- ja 3D-transformaatioita",
+              "Ymmärrän transition-ominaisuuden toiminnan",
+              "Osaan luoda keyframe-animaatioita"
+            ],
+            "Printtaus": [
+              "Osaan tehdä sivuille erillisen tulostus tyylistön",
+            ]
+          }
+        },
+        completedSkills: Alpine.$persist([]).as('completedSkills'),
+        toggleSkill(skill) {
+          if (this.completedSkills.includes(skill)) {
+            this.completedSkills = this.completedSkills.filter(s => s !== skill);
+          } else {
+            this.completedSkills.push(skill);
+            confetti({
+              particleCount: 100,
+              spread: 70,
+              origin: { y: 0.6 }
+            });
+          }
+        },
+        isSkillCompleted(skill, subskills) {
+          return subskills.every(subskill => this.completedSkills.includes(subskill));
+        },
+        calculateProgress(category) {
+          const totalSkills = Object.values(category).flat().length;
+          const completedSkills = Object.values(category).flat().filter(skill => this.completedSkills.includes(skill)).length;
+          return (completedSkills / totalSkills) * 100;
+        },
+        calculateProgressText(category) {
+          const totalSkills = Object.values(category).flat().length;
+          const completedSkills = Object.values(category).flat().filter(skill => this.completedSkills.includes(skill)).length;
+          return `${completedSkills}/${totalSkills}`;
+        },
+        
+      }
+    }
+  </script>
+</body>
+
+</html>
